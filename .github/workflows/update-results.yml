@@ -1,1 +1,34 @@
+name: Update Excel File
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Har kuni 00:00 da ishlaydi
+  workflow_dispatch: # Qo'lda ishga tushirish
+
+jobs:
+  update-excel:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: |
+        npm install xlsx node-fetch
+
+    - name: Run update script
+      run: |
+        node ./scripts/fetchStudentResults.js
+
+    - name: Commit updated Excel file
+      uses: EndBug/add-and-commit@v7
+      with:
+        add: 'student_results.xlsx'
+        message: 'Update student results'
 
